@@ -9,8 +9,9 @@ import {
   sendResponse,
   parseQueryData,
   paginate,
+  ENUM_ADMIN_ROLES,
 } from "../../utils";
-import { IMulterFiles } from "../../interfaces";
+import { IMulterFiles, IUser } from "../../interfaces";
 import { UserResponseDto } from "../../dtos";
 import { catchAsync } from "../../middlewares";
 
@@ -38,20 +39,40 @@ export const GetAllUsers: RequestHandler = catchAsync(
 export const GetUserById: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
     const { userId } = req.params;
+    const authUser = req.user as IUser;
 
-    // Validate ID format
+    // Validate ID format before any further processing
     if (!isValidObjectId(userId)) {
       throw new ApiError(httpStatus.BAD_REQUEST, staticProps.common.INVALID_ID);
     }
 
+    // Check if the authenticated user is an admin
+    const isAdmin =
+      authUser.role &&
+      Object.values(ENUM_ADMIN_ROLES).includes(
+        authUser.role as ENUM_ADMIN_ROLES
+      );
+
+    // If not an admin, ensure the user is trying to access their own data
+    if (!isAdmin && userId !== authUser._id.toString()) {
+      throw new ApiError(
+        httpStatus.UNAUTHORIZED,
+        staticProps.common.CAN_NOT_RETRIVE_OTHERS_DATA
+      );
+    }
+
+    // Fetch the user from the database
     const user = await User.findById(userId).lean();
 
+    // If user not found, throw an error
     if (!user) {
       throw new ApiError(httpStatus.NOT_FOUND, staticProps.common.NOT_FOUND);
     }
 
+    // Transform the user data into the response DTO
     const userFromDto = new UserResponseDto(user);
 
+    // Send the response
     sendResponse(res, {
       statusCode: httpStatus.OK,
       message: staticProps.common.RETRIEVED,
@@ -66,28 +87,44 @@ export const UpdateUserById: RequestHandler = catchAsync(
     // parsing data and params
     const { userId } = req.params;
     const parsedData = req.body;
-    const { single } = req.files as IMulterFiles;
+    const authUser = req.user as IUser;
 
-    if (!userId || !parsedData)
+    // Check if the authenticated user is an admin
+    const isAdmin =
+      authUser.role &&
+      Object.values(ENUM_ADMIN_ROLES).includes(
+        authUser.role as ENUM_ADMIN_ROLES
+      );
+
+    // If not an admin, ensure the user is trying to access their own data
+    if (!isAdmin && userId !== authUser._id.toString()) {
+      throw new ApiError(
+        httpStatus.UNAUTHORIZED,
+        staticProps.common.CAN_NOT_UPDATE_OTHERS_DATA
+      );
+    }
+
+    // esure userId and parsedData exist
+    if (!userId || !parsedData) {
       throw new ApiError(
         httpStatus.BAD_REQUEST,
         staticProps.common.MISSING_REQUIRED_FIELDS
       );
+    }
 
-    //get parsed data
+    // Get the parsed data excluding the password
     const { password, ...body } = parsedData;
 
-    // Check if a user exists or not
+    // Check if the user exists
     const existsUser = await User.findById(userId);
-    if (!existsUser)
+    if (!existsUser) {
       throw new ApiError(httpStatus.BAD_REQUEST, staticProps.common.NOT_FOUND);
+    }
 
-    //construct data
-    let constructedData = {
-      ...body,
-    };
+    // Construct data to be updated
+    let constructedData = { ...body };
 
-    // hash password
+    // Hash password if provided
     if (password) {
       const hashedPassword = await hashPassword(password);
       constructedData = {
@@ -96,7 +133,8 @@ export const UpdateUserById: RequestHandler = catchAsync(
       };
     }
 
-    //upload file
+    // Upload file if provided
+    const { single } = req.files as IMulterFiles;
     if (single) {
       const { filePath } = await uploadFiles(single);
       constructedData = {
@@ -105,15 +143,14 @@ export const UpdateUserById: RequestHandler = catchAsync(
       };
     }
 
-    // updating role info
+    // Update the user
     const data = await User.findOneAndUpdate(
       { _id: userId },
-      {
-        $set: constructedData,
-      },
+      { $set: constructedData },
       { new: true, runValidators: true }
     );
 
+    // Send the response
     sendResponse(res, {
       statusCode: httpStatus.OK,
       message: staticProps.common.UPDATED,
@@ -126,6 +163,22 @@ export const UpdateUserById: RequestHandler = catchAsync(
 export const DeleteUserById: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
     const { userId } = req.params;
+    const authUser = req.user as IUser;
+
+    // Check if the authenticated user is an admin
+    const isAdmin =
+      authUser.role &&
+      Object.values(ENUM_ADMIN_ROLES).includes(
+        authUser.role as ENUM_ADMIN_ROLES
+      );
+
+    // If not an admin, ensure the user is trying to access their own data
+    if (!isAdmin && userId !== authUser._id.toString()) {
+      throw new ApiError(
+        httpStatus.UNAUTHORIZED,
+        staticProps.common.CAN_NOT_DELETE_OTHERS_DATA
+      );
+    }
 
     if (!isValidObjectId(userId)) {
       throw new ApiError(httpStatus.BAD_REQUEST, staticProps.common.INVALID_ID);

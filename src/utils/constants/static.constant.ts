@@ -15,7 +15,11 @@ export const staticProps = {
   },
 
   common: {
+    INVALID_ROLE: "Invalid role!",
     INVALID_DATA: "Invalid data!",
+    CAN_NOT_RETRIVE_OTHERS_DATA: "Can not retrieve others data!",
+    CAN_NOT_UPDATE_OTHERS_DATA: "Can not update others data!",
+    CAN_NOT_DELETE_OTHERS_DATA: "Can not delete others data!",
     FAILED_TO_CREATE: "Failed to create!",
     SOMETHING_WENT_WRONG: "Something went wrong!",
     NOT_FOUND: "Not found!",
