@@ -1,4 +1,4 @@
-//src/routers/ticket/ticket.router.ts
+//src/routers/task/task.router.ts
 import express from "express";
 const router = express.Router();
 
@@ -10,12 +10,12 @@ import { ENUM_AUTH_ROLES } from "../../utils";
 
 // controllers
 import {
-  GetAllTickets,
-  GetTicketById,
-  AddOneTicket,
-  AddManyTickets,
-  UpdateTicketById,
-  DeleteTicketById,
+  GetAllTasks,
+  GetTaskById,
+  AddOneTask,
+  UpdateTaskById,
+  UpdateTaskStatusById,
+  DeleteTaskById,
 } from "../../controllers";
 
 //routes
@@ -25,17 +25,21 @@ router.get(
   authorizeEntity([
     ENUM_AUTH_ROLES.SUPER_ADMIN,
     ENUM_AUTH_ROLES.NORMAL_ADMIN,
+    ENUM_AUTH_ROLES.NORMAL_USER,
+    ENUM_AUTH_ROLES.PREMIUM_USER,
   ]),
-  GetAllTickets
+  GetAllTasks
 );
 router.get(
-  "/find/:ticketId",
+  "/find/:taskId",
   authenticateEntity,
   authorizeEntity([
     ENUM_AUTH_ROLES.SUPER_ADMIN,
     ENUM_AUTH_ROLES.NORMAL_ADMIN,
+    ENUM_AUTH_ROLES.NORMAL_USER,
+    ENUM_AUTH_ROLES.PREMIUM_USER,
   ]),
-  GetTicketById
+  GetTaskById
 );
 router.post(
   "/add",
@@ -43,35 +47,41 @@ router.post(
   authorizeEntity([
     ENUM_AUTH_ROLES.SUPER_ADMIN,
     ENUM_AUTH_ROLES.NORMAL_ADMIN,
+    ENUM_AUTH_ROLES.NORMAL_USER,
+    ENUM_AUTH_ROLES.PREMIUM_USER,
   ]),
-  AddOneTicket
-);
-router.post(
-  "/add-many",
-  authenticateEntity,
-  authorizeEntity([
-    ENUM_AUTH_ROLES.SUPER_ADMIN,
-    ENUM_AUTH_ROLES.NORMAL_ADMIN,
-  ]),
-  AddManyTickets
+  AddOneTask
 );
 router.patch(
-  "/update/:ticketId",
+  "/update/:taskId",
   authenticateEntity,
   authorizeEntity([
     ENUM_AUTH_ROLES.SUPER_ADMIN,
     ENUM_AUTH_ROLES.NORMAL_ADMIN,
+    ENUM_AUTH_ROLES.NORMAL_USER,
+    ENUM_AUTH_ROLES.PREMIUM_USER,
   ]),
-  UpdateTicketById
+  UpdateTaskById
+);
+router.patch(
+  "/update-status/:taskId",
+  authenticateEntity,
+  authorizeEntity([
+    ENUM_AUTH_ROLES.SUPER_ADMIN,
+    ENUM_AUTH_ROLES.NORMAL_ADMIN,
+    ENUM_AUTH_ROLES.NORMAL_USER,
+    ENUM_AUTH_ROLES.PREMIUM_USER,
+  ]),
+  UpdateTaskStatusById
 );
 router.delete(
-  "/delete/:ticketId",
+  "/delete/:taskId",
   authenticateEntity,
   authorizeEntity([
     ENUM_AUTH_ROLES.SUPER_ADMIN,
     ENUM_AUTH_ROLES.NORMAL_ADMIN,
   ]),
-  DeleteTicketById
+  DeleteTaskById
 );
 
-export const TicketRouter = router;
+export const TaskRouter = router;
