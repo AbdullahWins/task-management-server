@@ -663,6 +663,69 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Ai",
+			"item": [
+				{
+					"name": "ai/summary/:taskId",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{UserToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/ai/summary/67667bc6f8c531e048b24f6e",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"ai",
+								"summary",
+								"67667bc6f8c531e048b24f6e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ai/plan/:taskId",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{UserToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/ai/plan/67667cd1c4d95cc6383ca765",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"ai",
+								"plan",
+								"67667cd1c4d95cc6383ca765"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [

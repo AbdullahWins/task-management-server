@@ -5,6 +5,14 @@ export const staticProps = {
     DEFAULT_DOCUMENT_PATH: "public/default/default.png",
   },
 
+  openai: {
+    SUCCESSFUL_EMPTY_RESPONSE: "Ai returned empty response",
+    FAILED_TO_GENERATE_PLAN: "Failed to generate plan",
+    FAILED_TO_GENERATE_SUMMARY: "Failed to generate summary",
+    PLAN_GENERATED: "Plan generated successfully",
+    SUMMARY_GENERATED: "Summary generated successfully",
+  },
+
   monitor: {
     FAILED_TO_FETCH_METRICS: "Failed to fetch metrics",
   },

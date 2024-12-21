@@ -18,6 +18,10 @@ export const environment = {
     MONGOOSE_URI: process.env.MONGOOSE_URI || "mongodb://localhost:27017",
   },
 
+  openai: {
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY || "default",
+  },
+
   jwt: {
     JWT_ACCESS_TOKEN_SECRET: process.env.JWT_ACCESS_TOKEN_SECRET || "default",
     JWT_ACCESS_TOKEN_EXPIRATION_TIME:
