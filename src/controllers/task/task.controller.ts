@@ -8,6 +8,7 @@ import {
   sendResponse,
   paginate,
   parseQueryData,
+  ENUM_ADMIN_ROLES,
 } from "../../utils";
 import {
   TaskAddDtoZodSchema,
@@ -38,10 +39,35 @@ export const GetAllTasks: RequestHandler = catchAsync(
   }
 );
 
+//get own tasks
+export const GetOwnTasks: RequestHandler = catchAsync(
+  async (req: Request, res: Response) => {
+    const { page, limit } = parseQueryData(req.query);
+    const authUser = req.user as IUser;
+
+    const paginatedResult = await paginate(
+      Task.find({ userId: authUser._id }),
+      { page, limit }
+    );
+
+    const tasksFromDto = paginatedResult.data.map(
+      (task) => new TaskResponseDto(task.toObject())
+    );
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      message: staticProps.common.RETRIEVED,
+      data: tasksFromDto,
+      meta: paginatedResult.meta,
+    });
+  }
+);
+
 // get one task
 export const GetTaskById: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
     const { taskId } = req.params;
+    const authUser = req.user as IUser;
 
     // Validate ID format
     if (!isValidObjectId(taskId)) {
@@ -52,6 +78,21 @@ export const GetTaskById: RequestHandler = catchAsync(
 
     if (!task) {
       throw new ApiError(httpStatus.NOT_FOUND, staticProps.common.NOT_FOUND);
+    }
+
+    // Check if the authenticated user is an admin
+    const isAdmin =
+      authUser.role &&
+      Object.values(ENUM_ADMIN_ROLES).includes(
+        authUser.role as ENUM_ADMIN_ROLES
+      );
+
+    // If not an admin, ensure the user is trying to access their own data
+    if (!isAdmin && task?.userId.toString() !== authUser._id.toString()) {
+      throw new ApiError(
+        httpStatus.UNAUTHORIZED,
+        staticProps.common.CAN_NOT_RETRIVE_OTHERS_DATA
+      );
     }
 
     const taskFromDto = new TaskResponseDto(task);
@@ -106,6 +147,7 @@ export const UpdateTaskById: RequestHandler = catchAsync(
     // parsing data and params
     const { taskId } = req.params;
     const parsedData = req.body;
+    const authUser = req.user as IUser;
 
     //get parsed data
     const { title, description, dueDate } = parsedData as ITaskUpdate;
@@ -121,6 +163,21 @@ export const UpdateTaskById: RequestHandler = catchAsync(
     const existsTask = await Task.findById(taskId);
     if (!existsTask)
       throw new ApiError(httpStatus.BAD_REQUEST, staticProps.common.NOT_FOUND);
+
+    // Check if the authenticated user is an admin
+    const isAdmin =
+      authUser.role &&
+      Object.values(ENUM_ADMIN_ROLES).includes(
+        authUser.role as ENUM_ADMIN_ROLES
+      );
+
+    // If not an admin, ensure the user is trying to access their own data
+    if (!isAdmin && existsTask?.userId.toString() !== authUser._id.toString()) {
+      throw new ApiError(
+        httpStatus.UNAUTHORIZED,
+        staticProps.common.CAN_NOT_UPDATE_OTHERS_DATA
+      );
+    }
 
     //construct data
     let constructedData = {
@@ -158,6 +215,7 @@ export const UpdateTaskStatusById: RequestHandler = catchAsync(
     // parsing data and params
     const { taskId } = req.params;
     const parsedData = req.body;
+    const authUser = req.user as IUser;
 
     //get parsed data
     const { status } = parsedData as ITaskUpdate;
@@ -173,6 +231,21 @@ export const UpdateTaskStatusById: RequestHandler = catchAsync(
     const existsTask = await Task.findById(taskId);
     if (!existsTask)
       throw new ApiError(httpStatus.BAD_REQUEST, staticProps.common.NOT_FOUND);
+
+    // Check if the authenticated user is an admin
+    const isAdmin =
+      authUser.role &&
+      Object.values(ENUM_ADMIN_ROLES).includes(
+        authUser.role as ENUM_ADMIN_ROLES
+      );
+
+    // If not an admin, ensure the user is trying to access their own data
+    if (!isAdmin && existsTask?.userId.toString() !== authUser._id.toString()) {
+      throw new ApiError(
+        httpStatus.UNAUTHORIZED,
+        staticProps.common.CAN_NOT_UPDATE_OTHERS_DATA
+      );
+    }
 
     //construct data
     let constructedData = {
@@ -206,9 +279,28 @@ export const UpdateTaskStatusById: RequestHandler = catchAsync(
 export const DeleteTaskById: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
     const { taskId } = req.params;
+    const authUser = req.user as IUser;
 
     if (!taskId)
       throw new ApiError(httpStatus.BAD_REQUEST, staticProps.common.INVALID_ID);
+
+    // Check if a task exists or not
+    const existsTask = await Task.findById(taskId);
+
+    // Check if the authenticated user is an admin
+    const isAdmin =
+      authUser.role &&
+      Object.values(ENUM_ADMIN_ROLES).includes(
+        authUser.role as ENUM_ADMIN_ROLES
+      );
+
+    // If not an admin, ensure the user is trying to access their own data
+    if (!isAdmin && existsTask?.userId.toString() !== authUser._id.toString()) {
+      throw new ApiError(
+        httpStatus.UNAUTHORIZED,
+        staticProps.common.CAN_NOT_DELETE_OTHERS_DATA
+      );
+    }
 
     const result = await Task.deleteOne({ _id: taskId });
 

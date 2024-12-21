@@ -11,6 +11,7 @@ import { ENUM_AUTH_ROLES } from "../../utils";
 // controllers
 import {
   GetAllTasks,
+  GetOwnTasks,
   GetTaskById,
   AddOneTask,
   UpdateTaskById,
@@ -22,13 +23,19 @@ import {
 router.get(
   "/all",
   authenticateEntity,
+  authorizeEntity([ENUM_AUTH_ROLES.SUPER_ADMIN, ENUM_AUTH_ROLES.NORMAL_ADMIN]),
+  GetAllTasks
+);
+router.get(
+  "/own",
+  authenticateEntity,
   authorizeEntity([
     ENUM_AUTH_ROLES.SUPER_ADMIN,
     ENUM_AUTH_ROLES.NORMAL_ADMIN,
     ENUM_AUTH_ROLES.NORMAL_USER,
     ENUM_AUTH_ROLES.PREMIUM_USER,
   ]),
-  GetAllTasks
+  GetOwnTasks
 );
 router.get(
   "/find/:taskId",
@@ -80,6 +87,8 @@ router.delete(
   authorizeEntity([
     ENUM_AUTH_ROLES.SUPER_ADMIN,
     ENUM_AUTH_ROLES.NORMAL_ADMIN,
+    ENUM_AUTH_ROLES.NORMAL_USER,
+    ENUM_AUTH_ROLES.PREMIUM_USER,
   ]),
   DeleteTaskById
 );
