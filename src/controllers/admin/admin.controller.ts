@@ -3,7 +3,14 @@ import httpStatus from "http-status";
 import { Request, RequestHandler, Response } from "express";
 import { isValidObjectId } from "mongoose";
 import { Admin } from "../../models";
-import { ApiError, hashPassword, uploadFiles, validateZodSchema } from "../../services";
+import {
+  ApiError,
+  getCache,
+  hashPassword,
+  setCache,
+  uploadFiles,
+  validateZodSchema,
+} from "../../services";
 import {
   staticProps,
   sendResponse,
@@ -19,6 +26,23 @@ export const GetAllAdmins: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
     const { page, limit } = parseQueryData(req.query);
 
+    //get the cache
+    const cacheKey = `admins:page:${page}:limit:${limit}`;
+    const cachedAdmins = await getCache<{
+      data: AdminResponseDto[];
+      meta: any;
+    }>(cacheKey);
+
+    if (cachedAdmins) {
+      return sendResponse(res, {
+        statusCode: httpStatus.OK,
+        message: staticProps.common.RETRIEVED,
+        data: cachedAdmins.data,
+        meta: cachedAdmins.meta,
+      });
+    }
+
+    //if cache is unavailable, get data from db
     const paginatedResult = await paginate(Admin.find(), {
       page,
       limit,
@@ -31,6 +55,12 @@ export const GetAllAdmins: RequestHandler = catchAsync(
     const adminsFromDto = paginatedResult.data.map(
       (admin) => new AdminResponseDto(admin.toObject())
     );
+
+    //set the cache
+    await setCache(cacheKey, {
+      data: adminsFromDto,
+      meta: paginatedResult.meta,
+    });
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -50,13 +80,28 @@ export const GetAdminById: RequestHandler = catchAsync(
     if (!isValidObjectId(adminId)) {
       throw new ApiError(httpStatus.BAD_REQUEST, staticProps.common.INVALID_ID);
     }
-    // check if admin exists
+
+    //get the cache
+    const cacheKey = `admin:${adminId}`;
+    const cachedAdmin = await getCache<AdminResponseDto>(cacheKey);
+    if (cachedAdmin) {
+      return sendResponse(res, {
+        statusCode: httpStatus.OK,
+        message: staticProps.common.RETRIEVED,
+        data: cachedAdmin,
+      });
+    }
+
+    //check if admin exists
     const admin = await Admin.findById(adminId).lean<IAdmin>();
     if (!admin) {
       throw new ApiError(httpStatus.NOT_FOUND, staticProps.common.NOT_FOUND);
     }
 
     const adminFromDto = new AdminResponseDto(admin);
+
+    //set the cache
+    await setCache(cacheKey, adminFromDto);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,

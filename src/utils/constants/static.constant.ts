@@ -20,6 +20,8 @@ export const staticProps = {
   database: {
     CONNECTION_SUCCESS: "Connected to MongoDB using Mongoose!",
     CONNECTION_ERROR: "Error connecting database",
+    REDIS_CONNECTION_SUCCESS: "Connected to Redis!",
+    REDIS_CONNECTION_ERROR: "Error connecting to Redis",
   },
 
   common: {

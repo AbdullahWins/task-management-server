@@ -3,7 +3,13 @@ import httpStatus from "http-status";
 import { isValidObjectId } from "mongoose";
 import { Request, RequestHandler, Response } from "express";
 import { User } from "../../models";
-import { ApiError, hashPassword, uploadFiles } from "../../services";
+import {
+  ApiError,
+  getCache,
+  hashPassword,
+  setCache,
+  uploadFiles,
+} from "../../services";
 import {
   staticProps,
   sendResponse,
@@ -20,11 +26,33 @@ export const GetAllUsers: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
     const { page, limit } = parseQueryData(req.query);
 
+    //get the cache
+    const cacheKey = `users:page:${page}:limit:${limit}`;
+    const cachedUsers = await getCache<{ data: UserResponseDto[]; meta: any }>(
+      cacheKey
+    );
+
+    if (cachedUsers) {
+      return sendResponse(res, {
+        statusCode: httpStatus.OK,
+        message: staticProps.common.RETRIEVED,
+        data: cachedUsers.data,
+        meta: cachedUsers.meta,
+      });
+    }
+
+    //if cache is unavailable, get data from db
     const paginatedResult = await paginate(User.find(), { page, limit });
 
     const usersFromDto = paginatedResult.data.map(
       (user) => new UserResponseDto(user.toObject())
     );
+
+    //set the cache
+    await setCache(cacheKey, {
+      data: usersFromDto,
+      meta: paginatedResult.meta,
+    });
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -35,25 +63,25 @@ export const GetAllUsers: RequestHandler = catchAsync(
   }
 );
 
-// get one user
+//get one user
 export const GetUserById: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
     const { userId } = req.params;
     const authUser = req.user as IUser;
 
-    // Validate ID format before any further processing
+    //validate ID format before any further processing
     if (!isValidObjectId(userId)) {
       throw new ApiError(httpStatus.BAD_REQUEST, staticProps.common.INVALID_ID);
     }
 
-    // Check if the authenticated user is an admin
+    //check if the authenticated user is an admin
     const isAdmin =
       authUser.role &&
       Object.values(ENUM_ADMIN_ROLES).includes(
         authUser.role as ENUM_ADMIN_ROLES
       );
 
-    // If not an admin, ensure the user is trying to access their own data
+    //if not an admin, ensure the user is trying to access their own data
     if (!isAdmin && userId !== authUser._id.toString()) {
       throw new ApiError(
         httpStatus.UNAUTHORIZED,
@@ -61,10 +89,21 @@ export const GetUserById: RequestHandler = catchAsync(
       );
     }
 
-    // Fetch the user from the database
+    //get the cache
+    const cacheKey = `user:${userId}`;
+    const cachedUser = await getCache<UserResponseDto>(cacheKey);
+    if (cachedUser) {
+      return sendResponse(res, {
+        statusCode: httpStatus.OK,
+        message: staticProps.common.RETRIEVED,
+        data: cachedUser,
+      });
+    }
+
+    //if cache is unavailable, get data from db
     const user = await User.findById(userId).lean();
 
-    // If user not found, throw an error
+    //if user not found, throw an error
     if (!user) {
       throw new ApiError(httpStatus.NOT_FOUND, staticProps.common.NOT_FOUND);
     }
@@ -72,7 +111,10 @@ export const GetUserById: RequestHandler = catchAsync(
     // Transform the user data into the response DTO
     const userFromDto = new UserResponseDto(user);
 
-    // Send the response
+    //set the cache
+    await setCache(cacheKey, userFromDto);
+
+    //send the response
     sendResponse(res, {
       statusCode: httpStatus.OK,
       message: staticProps.common.RETRIEVED,

@@ -41,7 +41,6 @@ export const generateSummary = async (task: ITask): Promise<string> => {
       staticProps.openai.SUCCESSFUL_EMPTY_RESPONSE
     );
   } catch (error) {
-    console.log(error);
     throw new ApiError(
       httpStatus.INTERNAL_SERVER_ERROR,
       staticProps.openai.FAILED_TO_GENERATE_SUMMARY
@@ -76,7 +75,6 @@ export const generatePlanToFinish = async (task: ITask): Promise<string> => {
       staticProps.openai.SUCCESSFUL_EMPTY_RESPONSE
     );
   } catch (error) {
-    console.log(error);
     throw new ApiError(
       httpStatus.INTERNAL_SERVER_ERROR,
       staticProps.openai.FAILED_TO_GENERATE_PLAN

@@ -15,21 +15,49 @@ import {
   TaskResponseDto,
   TaskUpdateDtoZodSchema,
 } from "../../dtos";
-import { ApiError, validateZodSchema } from "../../services";
+import {
+  ApiError,
+  getCache,
+  setCache,
+  validateZodSchema,
+} from "../../services";
 import { ITaskAdd, ITaskUpdate, IUser } from "../../interfaces";
 import { catchAsync } from "../../middlewares";
 
-// get all tasks with pagination
+//get all tasks
 export const GetAllTasks: RequestHandler = catchAsync(
   async (req: Request, res: Response) => {
     const { page, limit } = parseQueryData(req.query);
 
+    //get cached data
+    const cacheKey = `tasks:page:${page}:limit:${limit}`;
+    const cachedTasks = await getCache<{ data: TaskResponseDto[]; meta: any }>(
+      cacheKey
+    );
+
+    if (cachedTasks) {
+      return sendResponse(res, {
+        statusCode: httpStatus.OK,
+        message: staticProps.common.RETRIEVED,
+        data: cachedTasks.data,
+        meta: cachedTasks.meta,
+      });
+    }
+
+    //if cache is unavailable, get data from db
     const paginatedResult = await paginate(Task.find(), { page, limit });
 
     const tasksFromDto = paginatedResult.data.map(
       (task) => new TaskResponseDto(task.toObject())
     );
 
+    //set the cache
+    await setCache(cacheKey, {
+      data: tasksFromDto,
+      meta: paginatedResult.meta,
+    });
+
+    // Send the response with tasks
     sendResponse(res, {
       statusCode: httpStatus.OK,
       message: staticProps.common.RETRIEVED,
@@ -45,6 +73,21 @@ export const GetOwnTasks: RequestHandler = catchAsync(
     const { page, limit } = parseQueryData(req.query);
     const authUser = req.user as IUser;
 
+    //get cached data
+    const cacheKey = `tasks:userId:${authUser._id}:page:${page}:limit:${limit}`;
+    const cachedTasks = await getCache<{ data: TaskResponseDto[]; meta: any }>(
+      cacheKey
+    );
+    if (cachedTasks) {
+      return sendResponse(res, {
+        statusCode: httpStatus.OK,
+        message: staticProps.common.RETRIEVED,
+        data: cachedTasks.data,
+        meta: cachedTasks.meta,
+      });
+    }
+
+    //if cache is unavailable, get data from db
     const paginatedResult = await paginate(
       Task.find({ userId: authUser._id }),
       { page, limit }
@@ -53,6 +96,12 @@ export const GetOwnTasks: RequestHandler = catchAsync(
     const tasksFromDto = paginatedResult.data.map(
       (task) => new TaskResponseDto(task.toObject())
     );
+
+    //set the cache
+    await setCache(cacheKey, {
+      data: tasksFromDto,
+      meta: paginatedResult.meta,
+    });
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -95,7 +144,22 @@ export const GetTaskById: RequestHandler = catchAsync(
       );
     }
 
+    //get the cache
+    const cacheKey = `task:${taskId}`;
+    const cachedTask = await getCache<TaskResponseDto>(cacheKey);
+    if (cachedTask) {
+      return sendResponse(res, {
+        statusCode: httpStatus.OK,
+        message: staticProps.common.RETRIEVED,
+        data: cachedTask,
+      });
+    }
+
+    //if cache is unavailable, get data from db
     const taskFromDto = new TaskResponseDto(task);
+
+    //set the cache
+    await setCache(cacheKey, taskFromDto);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,

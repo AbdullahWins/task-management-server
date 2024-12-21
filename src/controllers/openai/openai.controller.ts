@@ -17,9 +17,7 @@ export const createSummaryByTaskId: RequestHandler = catchAsync(
     const { taskId } = req.params;
     const authUser = req.user as IUser;
 
-    console.log("taskId", taskId);
-
-    // Validate ID format
+    //validate ID format
     if (!isValidObjectId(taskId)) {
       throw new ApiError(httpStatus.BAD_REQUEST, staticProps.common.INVALID_ID);
     }
@@ -30,14 +28,14 @@ export const createSummaryByTaskId: RequestHandler = catchAsync(
       throw new ApiError(httpStatus.NOT_FOUND, staticProps.common.NOT_FOUND);
     }
 
-    // Check if the authenticated user is an admin
+    //check if the authenticated user is an admin
     const isAdmin =
       authUser.role &&
       Object.values(ENUM_ADMIN_ROLES).includes(
         authUser.role as ENUM_ADMIN_ROLES
       );
 
-    // If not an admin, ensure the user is trying to access their own data
+    //if not an admin, ensure the user is trying to access their own data
     if (!isAdmin && task?.userId.toString() !== authUser._id.toString()) {
       throw new ApiError(
         httpStatus.UNAUTHORIZED,
@@ -61,7 +59,7 @@ export const createPlanToFinishByTaskId: RequestHandler = catchAsync(
     const { taskId } = req.params;
     const authUser = req.user as IUser;
 
-    // Validate ID format
+    //validate ID format
     if (!isValidObjectId(taskId)) {
       throw new ApiError(httpStatus.BAD_REQUEST, staticProps.common.INVALID_ID);
     }
@@ -72,14 +70,14 @@ export const createPlanToFinishByTaskId: RequestHandler = catchAsync(
       throw new ApiError(httpStatus.NOT_FOUND, staticProps.common.NOT_FOUND);
     }
 
-    // Check if the authenticated user is an admin
+    //check if the authenticated user is an admin
     const isAdmin =
       authUser.role &&
       Object.values(ENUM_ADMIN_ROLES).includes(
         authUser.role as ENUM_ADMIN_ROLES
       );
 
-    // If not an admin, ensure the user is trying to access their own data
+    //if not an admin, ensure the user is trying to access their own data
     if (!isAdmin && task?.userId.toString() !== authUser._id.toString()) {
       throw new ApiError(
         httpStatus.UNAUTHORIZED,
