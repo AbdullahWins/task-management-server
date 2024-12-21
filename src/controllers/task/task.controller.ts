@@ -17,6 +17,7 @@ import {
 } from "../../dtos";
 import {
   ApiError,
+  deleteCache,
   getCache,
   setCache,
   validateZodSchema,
@@ -265,6 +266,9 @@ export const UpdateTaskById: RequestHandler = catchAsync(
     }
     const taskFromDto = new TaskResponseDto(taskData);
 
+    //update the cache
+    await setCache(`task:${taskId}`, taskFromDto);
+
     sendResponse(res, {
       statusCode: httpStatus.OK,
       message: staticProps.common.UPDATED,
@@ -331,6 +335,9 @@ export const UpdateTaskStatusById: RequestHandler = catchAsync(
     }
     const taskFromDto = new TaskResponseDto(taskData);
 
+    //update the cache
+    await setCache(`task:${taskId}`, taskFromDto);
+
     sendResponse(res, {
       statusCode: httpStatus.OK,
       message: staticProps.common.UPDATED,
@@ -371,6 +378,9 @@ export const DeleteTaskById: RequestHandler = catchAsync(
     if (result.deletedCount === 0) {
       throw new ApiError(httpStatus.NOT_FOUND, staticProps.common.NOT_FOUND);
     }
+
+    //delete the cache
+    await deleteCache(`task:${taskId}`);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,

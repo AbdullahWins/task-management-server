@@ -5,6 +5,7 @@ import { Request, RequestHandler, Response } from "express";
 import { User } from "../../models";
 import {
   ApiError,
+  deleteCache,
   getCache,
   hashPassword,
   setCache,
@@ -192,11 +193,20 @@ export const UpdateUserById: RequestHandler = catchAsync(
       { new: true, runValidators: true }
     );
 
+    if (!data) {
+      throw new ApiError(httpStatus.NOT_FOUND, staticProps.common.NOT_FOUND);
+    }
+
+    const userFromDto = new UserResponseDto(data);
+
+    //update the cache
+    await setCache(`user:${userId}`, userFromDto);
+
     // Send the response
     sendResponse(res, {
       statusCode: httpStatus.OK,
       message: staticProps.common.UPDATED,
-      data,
+      data: userFromDto,
     });
   }
 );
@@ -231,6 +241,9 @@ export const DeleteUserById: RequestHandler = catchAsync(
     if (result.deletedCount === 0) {
       throw new ApiError(httpStatus.NOT_FOUND, staticProps.common.NOT_FOUND);
     }
+
+    //delete the cache
+    await deleteCache(`user:${userId}`);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,

@@ -5,6 +5,7 @@ import { isValidObjectId } from "mongoose";
 import { Admin } from "../../models";
 import {
   ApiError,
+  deleteCache,
   getCache,
   hashPassword,
   setCache,
@@ -167,6 +168,9 @@ export const UpdateAdminById: RequestHandler = catchAsync(
 
     const adminFromDto = new AdminResponseDto(data);
 
+    //update the cache
+    await setCache(`admin:${adminId}`, adminFromDto);
+
     sendResponse(res, {
       statusCode: httpStatus.OK,
       message: staticProps.common.UPDATED,
@@ -190,6 +194,9 @@ export const DeleteAdminById: RequestHandler = catchAsync(
     if (result.deletedCount === 0) {
       throw new ApiError(httpStatus.NOT_FOUND, staticProps.common.NOT_FOUND);
     }
+
+    //delete the cache
+    await deleteCache(`admin:${adminId}`);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
