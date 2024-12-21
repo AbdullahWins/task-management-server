@@ -14,7 +14,9 @@ services:
     dns:
       - 8.8.8.8
       - 8.8.4.4
-    network_mode: host
+    # network_mode: host
+    networks:
+      - task-network
 
   mongodb:
     image: mongo:7.0.5
@@ -40,10 +42,39 @@ services:
     networks:
       - task-network
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - app
+    networks:
+      - task-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - task-network
+
 volumes:
   mongodb_data:
     driver: local
   redis_data:
+    driver: local
+  grafana_data:
     driver: local
 
 networks:
