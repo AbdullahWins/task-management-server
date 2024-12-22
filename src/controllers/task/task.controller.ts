@@ -198,6 +198,9 @@ export const AddOneTask: RequestHandler = catchAsync(
 
     const taskFromDto = new TaskResponseDto(taskData);
 
+    //delete all the cache related to the user tasks
+    await deleteCache(`tasks:userId:${authUser._id}*`);
+
     sendResponse(res, {
       statusCode: httpStatus.CREATED,
       message: staticProps.common.CREATED,
@@ -266,8 +269,8 @@ export const UpdateTaskById: RequestHandler = catchAsync(
     }
     const taskFromDto = new TaskResponseDto(taskData);
 
-    //update the cache
-    await setCache(`task:${taskId}`, taskFromDto);
+    //delete all the cache related to the user tasks
+    await deleteCache(`tasks:userId:${authUser._id}*`);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -335,8 +338,8 @@ export const UpdateTaskStatusById: RequestHandler = catchAsync(
     }
     const taskFromDto = new TaskResponseDto(taskData);
 
-    //update the cache
-    await setCache(`task:${taskId}`, taskFromDto);
+    //delete all the cache related to the user tasks
+    await deleteCache(`tasks:userId:${authUser._id}*`);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -379,8 +382,8 @@ export const DeleteTaskById: RequestHandler = catchAsync(
       throw new ApiError(httpStatus.NOT_FOUND, staticProps.common.NOT_FOUND);
     }
 
-    //delete the cache
-    await deleteCache(`task:${taskId}`);
+    //delete all the cache related to the user tasks
+    await deleteCache(`tasks:userId:${authUser._id}*`);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
