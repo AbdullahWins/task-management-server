@@ -53,6 +53,8 @@ export const staticProps = {
     INVALID_CREDENTIALS: "Invalid credentials!",
     INVALID_PASSWORD: "Invalid password!",
 
+    NO_PASSWORD_SET: "No password set!",
+
     FORBIDDEN: "Forbidden!",
     UNAUTHORIZED: "Unauthorized!",
     DATA_REQUIRED: "Data is required!",
