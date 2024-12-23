@@ -7,7 +7,7 @@ export interface ITask extends ICommonSchema {
   userId: Types.ObjectId;
   title: string;
   description: string;
-  dueDate: number;
+  dueDate: string;
   status: string;
 }
 
@@ -16,7 +16,7 @@ export interface ITaskAdd {
   userId: Types.ObjectId;
   title: string;
   description: string;
-  dueDate: number;
+  dueDate: string;
   status: string;
 }
 
@@ -25,7 +25,7 @@ export interface ITaskUpdate {
   userId?: Types.ObjectId;
   title?: string;
   description?: string;
-  dueDate?: number;
+  dueDate?: string;
   status?: string;
 }
 

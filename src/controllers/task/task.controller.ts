@@ -177,7 +177,7 @@ export const AddOneTask: RequestHandler = catchAsync(
     const parsedData = req.body;
     const authUser = req.user as IUser;
 
-    const { title, description, dueDate } = parsedData as ITaskAdd;
+    const { title, description, dueDate, status } = parsedData as ITaskAdd;
 
     // validate data with zod schema
     validateZodSchema(TaskAddDtoZodSchema, parsedData);
@@ -187,6 +187,7 @@ export const AddOneTask: RequestHandler = catchAsync(
       title,
       description,
       dueDate,
+      status,
     };
 
     // Create new task

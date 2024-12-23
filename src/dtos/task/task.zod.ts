@@ -6,7 +6,7 @@ const TaskDtoZodSchema = z.object({
   userId: z.string(),
   title: z.string(),
   description: z.string(),
-  dueDate: z.number(),
+  dueDate: z.string(),
   status: z.string(),
 });
 
