@@ -7,9 +7,9 @@ import { staticProps } from "../../utils";
 
 const prompts = {
   summarize:
-    "You are a precise summarizer. Create concise, clear summaries for my task. It has title, description, duedate in unix time and status. I am giving you a json file with the task data.",
+    "You are a precise summarizer. Create concise, clear summaries for my task. It has title, description, duedate in unix time and status. I am giving you a json file with the task data, expecting text summary.",
   planToFinish:
-    "You are a task planner. Put together a comprehansive plan for my task. It has title, description, duedate in unix time and status. I am giving you a json file with the task data.",
+    "You are a task planner. Put together a comprehansive plan for my task. It has title, description, duedate in unix time and status. I am giving you a json file with the task data, expecting a plan to finish the task in text format.",
 };
 
 const modelName = "chatgpt-4o-latest";
