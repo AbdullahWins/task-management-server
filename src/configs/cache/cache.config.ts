@@ -3,8 +3,38 @@ import Redis from "ioredis";
 import { environment } from "../environment/environment.config";
 import { errorLogger, infoLogger } from "../../services";
 
-//create and export the Redis client instance
-export const redis = new Redis(environment.db.REDIS_URI);
+let retryAttempts = 0;
+
+//export redis instance
+export const redis = new Redis(environment.db.REDIS_URI, {
+  retryStrategy: (times) => {
+    retryAttempts++;
+    if (retryAttempts >= 3) {
+      errorLogger.error(
+        `Redis retry failed after ${retryAttempts} attempts. No more retries.`
+      );
+      return null;
+    }
+    const delay = Math.min(times * 100, 2000);
+    infoLogger.warn(`Retrying Redis connection in ${delay}ms...`);
+    return delay;
+  },
+});
+
+//handle Redis errors
+redis.on("error", (err) => {
+  errorLogger.error(`Redis error: ${err.message}`);
+});
+
+//handle Redis connection retries
+redis.on("reconnecting", (time: number) => {
+  infoLogger.warn(`Reconnecting to Redis in ${time}ms...`);
+});
+
+//handle Redis connection established
+redis.on("connect", () => {
+  infoLogger.info("Redis connection established.");
+});
 
 export const connectToRedis = async () => {
   try {

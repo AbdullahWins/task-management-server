@@ -12,6 +12,7 @@ export const environment = {
     SERVER_ENV: process.env.SERVER_ENV || "development",
     SERVER_PORT: Number(process.env.SERVER_PORT) || 5000,
     SERVER_BASE_URL: process.env.SERVER_BASE_URL || "http://localhost:6000",
+    CORS_ORIGIN: process.env.CORS_ORIGIN || "*",
   },
 
   db: {

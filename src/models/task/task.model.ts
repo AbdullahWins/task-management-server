@@ -18,7 +18,7 @@ const TaskSchema = new Schema<ITaskDocument>({
     required: [true, "Description is required"],
   },
   dueDate: {
-    type: Number,
+    type: String,
     required: [true, "Due date is required"],
   },
   status: {

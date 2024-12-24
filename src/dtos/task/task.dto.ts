@@ -8,7 +8,7 @@ export class TaskDto implements Partial<ITask> {
   userId: Types.ObjectId;
   title: string;
   description: string;
-  dueDate: number;
+  dueDate: string;
   status: string;
 
   constructor(task: ITask) {

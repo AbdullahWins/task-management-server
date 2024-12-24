@@ -1,8 +1,8 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { comparePassword, hashPassword } from "./bcrypt.service";
 
 // Mock the bcrypt functions
-jest.mock("bcrypt");
+jest.mock("bcryptjs");
 
 describe("Bcrypt Service", () => {
   describe("comparePassword", () => {

@@ -17,6 +17,7 @@ import {
 } from "../../dtos";
 import {
   ApiError,
+  deleteCache,
   getCache,
   setCache,
   validateZodSchema,
@@ -176,7 +177,7 @@ export const AddOneTask: RequestHandler = catchAsync(
     const parsedData = req.body;
     const authUser = req.user as IUser;
 
-    const { title, description, dueDate } = parsedData as ITaskAdd;
+    const { title, description, dueDate, status } = parsedData as ITaskAdd;
 
     // validate data with zod schema
     validateZodSchema(TaskAddDtoZodSchema, parsedData);
@@ -186,6 +187,7 @@ export const AddOneTask: RequestHandler = catchAsync(
       title,
       description,
       dueDate,
+      status,
     };
 
     // Create new task
@@ -196,6 +198,9 @@ export const AddOneTask: RequestHandler = catchAsync(
     }
 
     const taskFromDto = new TaskResponseDto(taskData);
+
+    //delete all the cache related to the user tasks
+    await deleteCache(`tasks:userId:${authUser._id}*`);
 
     sendResponse(res, {
       statusCode: httpStatus.CREATED,
@@ -265,6 +270,9 @@ export const UpdateTaskById: RequestHandler = catchAsync(
     }
     const taskFromDto = new TaskResponseDto(taskData);
 
+    //delete all the cache related to the user tasks
+    await deleteCache(`tasks:userId:${authUser._id}*`);
+
     sendResponse(res, {
       statusCode: httpStatus.OK,
       message: staticProps.common.UPDATED,
@@ -331,6 +339,9 @@ export const UpdateTaskStatusById: RequestHandler = catchAsync(
     }
     const taskFromDto = new TaskResponseDto(taskData);
 
+    //delete all the cache related to the user tasks
+    await deleteCache(`tasks:userId:${authUser._id}*`);
+
     sendResponse(res, {
       statusCode: httpStatus.OK,
       message: staticProps.common.UPDATED,
@@ -371,6 +382,9 @@ export const DeleteTaskById: RequestHandler = catchAsync(
     if (result.deletedCount === 0) {
       throw new ApiError(httpStatus.NOT_FOUND, staticProps.common.NOT_FOUND);
     }
+
+    //delete all the cache related to the user tasks
+    await deleteCache(`tasks:userId:${authUser._id}*`);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,

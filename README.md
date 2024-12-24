@@ -9,7 +9,7 @@ Task Management App is a robust application designed to help users manage their 
 
 Before running the application, ensure you have the following installed:
 
-- **Node.js** (v16 or later)
+- **Node.js** (v20 or later)
 - **Yarn** (latest version recommended)
 - **Docker** (for database setup)
 

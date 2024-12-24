@@ -28,6 +28,8 @@ volumes:
     driver: local
   redis_data:
     driver: local
+  grafana_data:
+    driver: local
 
 networks:
   task-network:

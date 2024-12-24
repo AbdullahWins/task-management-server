@@ -10,9 +10,10 @@ import { requestLoggerMiddleware } from "../logger/logger.middleware";
 import { promClientMiddleware } from "../monitor/monitor.middleware";
 import { configurePassport } from "../../configs/passport/passport.config";
 import { parseJsonBodyMiddleware } from "../parse/parse.middleware";
+import { corsOptions } from "../../configs";
 
 export const globalMiddleware = (app: Application) => {
-  app.use(cors());
+  app.use(cors(corsOptions));
   app.use(sanitize());
   app.use(helmet());
   app.use(requestLoggerMiddleware);
