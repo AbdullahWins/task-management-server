@@ -1,5 +1,5 @@
 // src/services/bcrypt/bcrypt.service.ts
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { environment } from "../../configs";
 
 export const comparePassword = async (
@@ -17,3 +17,4 @@ export const hashPassword = async (string: string): Promise<string> => {
   );
   return hashedString;
 };
+ 

@@ -1,0 +1,770 @@
+{
+	"info": {
+		"_postman_id": "ac08ce76-8fac-4443-a506-f72ff6c41682",
+		"name": "Task Management App",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31510085",
+		"_collection_link": "https://dark-space-831294.postman.co/workspace/My-Workspace~c1856243-1dee-4590-88c7-88acd2c83342/collection/31510085-ac08ce76-8fac-4443-a506-f72ff6c41682?action=share&source=collection_link&creator=31510085"
+	},
+	"item": [
+		{
+			"name": "Admins",
+			"item": [
+				{
+					"name": "admins/signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "data",
+									"value": "{\n  \"email\": \"abdudevs@gmail.com\",\n  \"fullName\": \"John\",\n  \"password\": \"111111\",\n  \"role\": \"super-admin\"\n}\n",
+									"type": "text"
+								},
+								{
+									"key": "single",
+									"type": "file",
+									"src": "/C:/Users/HP/Downloads/images.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/admins/signup",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"admins",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "admins/signin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "data",
+									"value": "{\n  \"email\": \"abdudevs@gmail.com\",\n  \"password\": \"111111\"\n}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/admins/signin",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"admins",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "admins/all",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AdminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/admins/all?page=1&limit=1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"admins",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "admins/find/:id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AdminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/admins/find/6765b7eae013a3537160d351",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"admins",
+								"find",
+								"6765b7eae013a3537160d351"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "admins/update/:id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AdminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "data",
+									"value": "{\n  \"password\": \"111111\"\n}",
+									"type": "text"
+								},
+								{
+									"key": "single",
+									"type": "file",
+									"src": "/C:/Users/HP/Downloads/pexels-ahr-graphics-784390404-19036037.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/admins/update/6765b7eae013a3537160d351",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"admins",
+								"update",
+								"6765b7eae013a3537160d351"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "admins/delete/:id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AdminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/admins/delete/6765b88ee013a3537160d36b",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"admins",
+								"delete",
+								"6765b88ee013a3537160d36b"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "users/signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "data",
+									"value": "{\n  \"email\": \"abdudevs@gmail.com\",\n  \"fullName\": \"John\",\n  \"password\": \"111111\",\n  \"username\": \"lulesa3\"\n}\n",
+									"type": "text"
+								},
+								{
+									"key": "single",
+									"type": "file",
+									"src": "/run/user/1000/doc/9e1334cf/default.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/signup",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users/signin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "data",
+									"value": "{\n  \"email\": \"abdudevs@gmail.com\",\n  \"password\": \"111111\"\n}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/signin",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users/all",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AdminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/all",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users/find/:id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AdminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/find/6765bcc70e86c4e5121e03ce",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"find",
+								"6765bcc70e86c4e5121e03ce"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users/update/:id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{UserToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "single",
+									"type": "file",
+									"src": "/C:/Users/HP/Downloads/github.png"
+								},
+								{
+									"key": "data",
+									"value": "{ \n  \"password\": \"112233\"\n}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/update/6765bcc70e86c4e5121e03ce",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"update",
+								"6765bcc70e86c4e5121e03ce"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users/delete/:id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{UserToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/delete/6765b8c3e013a3537160d371",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"delete",
+								"6765b8c3e013a3537160d371"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tasks",
+			"item": [
+				{
+					"name": "tasks/all",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AdminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/tasks/all?page=1&limit=2",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"tasks",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "tasks/own",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{UserToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/tasks/own?page=1&limit=2",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"tasks",
+								"own"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "tasks/find/:id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{UserToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/tasks/find/67667cccc4d95cc6383ca762",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"tasks",
+								"find",
+								"67667cccc4d95cc6383ca762"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "tasks/add",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{UserToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "data",
+									"value": "{\n  \"title\": \"Implement Login Feature\",\n  \"description\": \"Develop and integrate a login functionality with user authentication using JWT.\",\n  \"dueDate\": 1703471999\n}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/tasks/add",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"tasks",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "tasks/update/:id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{UserToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "data",
+									"value": "{\n  \"description\": \"Develop and integrate a login functionality with user authentication using JWT 2.\"\n}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/tasks/update/67667cccc4d95cc6383ca762",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"tasks",
+								"update",
+								"67667cccc4d95cc6383ca762"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "tasks/update-status/:id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{UserToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "data",
+									"value": "{\n  \"status\": \"completed\"\n}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/tasks/update-status/67667cccc4d95cc6383ca762",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"tasks",
+								"update-status",
+								"67667cccc4d95cc6383ca762"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "tasks/delete/:id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{UserToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/tasks/delete/67667cccc4d95cc6383ca762",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"tasks",
+								"delete",
+								"67667cccc4d95cc6383ca762"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ai",
+			"item": [
+				{
+					"name": "ai/summary/:taskId",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{UserToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/ai/summary/67667bc6f8c531e048b24f6e",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"ai",
+								"summary",
+								"67667bc6f8c531e048b24f6e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ai/plan/:taskId",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{UserToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/ai/plan/67667cd1c4d95cc6383ca765",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"ai",
+								"plan",
+								"67667cd1c4d95cc6383ca765"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "http://localhost:5000/api/v1",
+			"type": "string"
+		},
+		{
+			"key": "AdminToken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzY2NzI0Njk1NDlhZWRkZDY1MDg4Y2UiLCJlbWFpbCI6ImFiZHVkZXZzQGdtYWlsLmNvbSIsInJvbGUiOiJzdXBlci1hZG1pbiIsImlhdCI6MTczNDc2NzE3NCwiZXhwIjoxNzM3MzU5MTc0fQ._MqCEqckGMy12c0q4n_zgbh5eH7Bgm6u_YR4GvKV764",
+			"type": "string"
+		},
+		{
+			"key": "UserToken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzY2N2M4ZGM0ZDk1Y2M2MzgzY2E3NWMiLCJlbWFpbCI6ImFiZHVkZXZzQGdtYWlsLmNvbSIsInJvbGUiOiJub3JtYWwtdXNlciIsImlhdCI6MTczNDc2OTgwNSwiZXhwIjoxNzM3MzYxODA1fQ.FkI0QS9te9dvJIrNvvjoOBCWNKdgO1GrI3CR4RkS_hQ",
+			"type": "string"
+		}
+	]
+}

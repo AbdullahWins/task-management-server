@@ -4,6 +4,7 @@ import { Server } from "http";
 import { connectToDatabase } from "../database/database.config";
 import { environment } from "../environment/environment.config";
 import { errorLogger, infoLogger } from "../../services";
+import { connectToRedis } from "../cache/cache.config";
 
 // server related works
 process.on("uncaughtException", (error) => {
@@ -19,6 +20,8 @@ export const startServer = async (app: Application) => {
     server = app.listen(environment.server.SERVER_PORT, async () => {
       // connect database after server started
       await connectToDatabase();
+
+      await connectToRedis();
 
       infoLogger.info(
         `Listening on port http://localhost:${environment.server.SERVER_PORT}/api/v1`

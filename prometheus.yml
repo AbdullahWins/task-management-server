@@ -1,0 +1,8 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'task-management-server'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['task-management-server:5000']
