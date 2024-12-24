@@ -12,14 +12,16 @@ export const environment = {
     SERVER_ENV: process.env.SERVER_ENV || "development",
     SERVER_PORT: Number(process.env.SERVER_PORT) || 5000,
     SERVER_BASE_URL: process.env.SERVER_BASE_URL || "http://localhost:6000",
+    CORS_ORIGIN: process.env.CORS_ORIGIN || "*",
   },
 
   db: {
     MONGOOSE_URI: process.env.MONGOOSE_URI || "mongodb://localhost:27017",
-    DATABASE_NAME: process.env.DATABASE_NAME || "default",
-    CONNECTION_STRING:
-      `${process.env.MONGOOSE_URI}/${process.env.DATABASE_NAME}` ||
-      "mongodb://localhost:27017/default",
+    REDIS_URI: process.env.REDIS_URI || "redis://localhost:6379",
+  },
+
+  openai: {
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY || "default",
   },
 
   jwt: {

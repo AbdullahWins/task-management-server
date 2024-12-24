@@ -5,6 +5,14 @@ export const staticProps = {
     DEFAULT_DOCUMENT_PATH: "public/default/default.png",
   },
 
+  openai: {
+    SUCCESSFUL_EMPTY_RESPONSE: "Ai returned empty response",
+    FAILED_TO_GENERATE_PLAN: "Failed to generate plan",
+    FAILED_TO_GENERATE_SUMMARY: "Failed to generate summary",
+    PLAN_GENERATED: "Plan generated successfully",
+    SUMMARY_GENERATED: "Summary generated successfully",
+  },
+
   monitor: {
     FAILED_TO_FETCH_METRICS: "Failed to fetch metrics",
   },
@@ -12,10 +20,16 @@ export const staticProps = {
   database: {
     CONNECTION_SUCCESS: "Connected to MongoDB using Mongoose!",
     CONNECTION_ERROR: "Error connecting database",
+    REDIS_CONNECTION_SUCCESS: "Connected to Redis!",
+    REDIS_CONNECTION_ERROR: "Error connecting to Redis",
   },
 
   common: {
+    INVALID_ROLE: "Invalid role!",
     INVALID_DATA: "Invalid data!",
+    CAN_NOT_RETRIVE_OTHERS_DATA: "Can not retrieve others data!",
+    CAN_NOT_UPDATE_OTHERS_DATA: "Can not update others data!",
+    CAN_NOT_DELETE_OTHERS_DATA: "Can not delete others data!",
     FAILED_TO_CREATE: "Failed to create!",
     SOMETHING_WENT_WRONG: "Something went wrong!",
     NOT_FOUND: "Not found!",
@@ -38,6 +52,8 @@ export const staticProps = {
     INVALID_ID: "Invalid ID format!",
     INVALID_CREDENTIALS: "Invalid credentials!",
     INVALID_PASSWORD: "Invalid password!",
+
+    NO_PASSWORD_SET: "No password set!",
 
     FORBIDDEN: "Forbidden!",
     UNAUTHORIZED: "Unauthorized!",

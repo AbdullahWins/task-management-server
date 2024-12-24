@@ -5,7 +5,7 @@ import { errorLogger, infoLogger } from "../../services";
 import { staticProps } from "../../utils";
 
 export const connectToDatabase = async () => {
-  const uri = environment.db.CONNECTION_STRING;
+  const uri = `${environment.db.MONGOOSE_URI}`;
   try {
     await mongoose.connect(uri, {
       // Specify the write concern mode

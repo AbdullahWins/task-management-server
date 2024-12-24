@@ -36,6 +36,8 @@ router.get(
   authorizeEntity([
     ENUM_AUTH_ROLES.SUPER_ADMIN,
     ENUM_AUTH_ROLES.NORMAL_ADMIN,
+    ENUM_AUTH_ROLES.NORMAL_USER,
+    ENUM_AUTH_ROLES.PREMIUM_USER,
   ]),
   GetUserById
 );
@@ -45,6 +47,8 @@ router.patch(
   authorizeEntity([
     ENUM_AUTH_ROLES.SUPER_ADMIN,
     ENUM_AUTH_ROLES.NORMAL_ADMIN,
+    ENUM_AUTH_ROLES.NORMAL_USER,
+    ENUM_AUTH_ROLES.PREMIUM_USER,
   ]),
   UpdateUserById
 );
@@ -54,6 +58,8 @@ router.delete(
   authorizeEntity([
     ENUM_AUTH_ROLES.SUPER_ADMIN,
     ENUM_AUTH_ROLES.NORMAL_ADMIN,
+    ENUM_AUTH_ROLES.NORMAL_USER,
+    ENUM_AUTH_ROLES.PREMIUM_USER,
   ]),
   DeleteUserById
 );

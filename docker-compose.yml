@@ -1,0 +1,36 @@
+services:
+  mongodb:
+    image: mongo:7.0.5
+    container_name: mongodb-for-task-management
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    networks:
+      - task-network
+
+  redis:
+    image: redis:7.2.4-alpine
+    container_name: redis-for-task-management
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+    networks:
+      - task-network
+
+volumes:
+  mongodb_data:
+    driver: local
+  redis_data:
+    driver: local
+  grafana_data:
+    driver: local
+
+networks:
+  task-network:
+    driver: bridge

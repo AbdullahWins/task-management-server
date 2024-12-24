@@ -5,7 +5,7 @@ export * from "./file/file.interface";
 export * from "./pagination/pagination.interface";
 export * from "./user/user.interface";
 export * from "./admin/admin.interface";
-export * from "./ticket/ticket.interface";
+export * from "./task/task.interface";
 export * from "./bcrypt/bcrypt.interface";
 export * from "./jwt/jwt.interface";
 export * from "./passport/passport.interface";
